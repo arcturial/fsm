@@ -1,0 +1,27 @@
+{
+    "name": "league/fsm",
+    "description": "Simple Finite State Machine",
+    "keywords": [
+        "league",
+        "package"
+    ],
+    "homepage": "https://github.com/php-loep/fsm",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chris Brand",
+            "email": "arcturial@gmail.com",
+            "homepage": "http://www.cainsvault.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "clue/graph": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "League": ["src", "tests"]
+        }
+    }
+}
