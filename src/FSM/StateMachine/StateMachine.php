@@ -19,7 +19,7 @@ use \LogicException;
  * @package  FSM\StateMachine
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
-class StateMachine
+abstract class StateMachine
 {
     /**
      * @var StateInterface
@@ -54,7 +54,16 @@ class StateMachine
     public function __construct($name)
     {
         $this->name = $name;
+
+        $this->configureMachine();
     }
+
+    /**
+     * Set up some machine tasks like states/transitions/triggers.
+     *
+     * @return boolean
+     */
+    abstract protected function configureMachine();
 
     /**
      * Return the name of the machine.
@@ -74,6 +83,19 @@ class StateMachine
     public function getCurrentState()
     {
         return $this->states[$this->activeState];
+    }
+
+    /**
+     * Set the current state. This method allows you to update
+     * to state in which a machine currently resides.
+     *
+     * @param string $state The state of the machine
+     *
+     * @return boolean
+     */
+    protected function setCurrentState($state)
+    {
+        $this->activeState = $state;
     }
 
     /**
@@ -114,7 +136,7 @@ class StateMachine
         // Resolve the initial state
         foreach ($this->states as $state) {
             if ($state->getType() == StateInterface::TYPE_INITIAL) {
-                $this->activeState = $state->getName();
+                $this->setCurrentState($state->getName());
             }
         }
 
@@ -199,7 +221,7 @@ class StateMachine
                 // Process a transition and mark it as the new starting point
                 if ($transition->process()) {
                     $path = $transition;
-                    $this->activeState = $path->getTransitionTo()->getName();
+                    $this->setCurrentState($path->getTransitionTo()->getName());
                     break;
                 }
             }

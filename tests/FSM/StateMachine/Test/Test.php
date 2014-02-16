@@ -102,39 +102,53 @@ class Payment
     public $state = 'created';
 }
 
+class PaymentMachine extends StateMachine
+{
+    public function __construct($name, Payment $payment)
+    {
+        $this->payment = $payment;
+
+        parent::__construct($name);
+    }
+
+    protected function configureMachine()
+    {
+        $created = new State('created', StateInterface::TYPE_INITIAL);
+        $auth = new State('auth', StateInterface::TYPE_INTERMEDIATE);
+        $auth->addAction(new AuthAction($this->payment));
+        $pending = new State('pending', StateInterface::TYPE_INTERMEDIATE);
+        $auth->addAction(new PendingAction($this->payment));
+        $committed = new State('committed', StateInterface::TYPE_FINAL);
+        $reversed = new State('reversed', StateInterface::TYPE_FINAL);
+
+        $authPayment = new Transition($created, $auth);
+        $commitPayment = new Transition($auth, $committed);
+        $commitPayment->addCondition(new FraudAcceptPayment());
+        $commitPaymentReview = new Transition($auth, $pending);
+        $commitPaymentReview->addCondition(new FraudReviewCondition());
+        $approvePayment = new Transition($pending, $committed);
+        $approvePayment->addCondition(new FinancePermissions());
+        $reversePayment = new Transition($committed, $reversed);
+
+        $this->addTransition($authPayment);
+        $this->addTransition($commitPayment);
+        $this->addTransition($approvePayment);
+        $this->addTransition($commitPaymentReview);
+        $this->addTransition($reversePayment);
+
+        $this->addTrigger('authorize', array($authPayment));
+        $this->addTrigger('commit', array($commitPayment, $commitPaymentReview, $approvePayment));
+        $this->addTrigger('approve', array($approvePayment));
+
+        // Set the current state of the object
+        $this->setCurrentState($this->payment->state);
+    }
+}
+
 
 
 $payment = new Payment();
-$stateMachine = new StateMachine('test');
-
-$created = new State('created', StateInterface::TYPE_INITIAL);
-$auth = new State('auth', StateInterface::TYPE_INTERMEDIATE);
-$auth->addAction(new AuthAction($payment));
-$pending = new State('pending', StateInterface::TYPE_INTERMEDIATE);
-$auth->addAction(new PendingAction($payment));
-$committed = new State('committed', StateInterface::TYPE_FINAL);
-$reversed = new State('reversed', StateInterface::TYPE_FINAL);
-
-$authPayment = new Transition($created, $auth);
-$commitPayment = new Transition($auth, $committed);
-$commitPayment->addCondition(new FraudAcceptPayment());
-$commitPaymentReview = new Transition($auth, $pending);
-$commitPaymentReview->addCondition(new FraudReviewCondition());
-$approvePayment = new Transition($pending, $committed);
-$approvePayment->addCondition(new FinancePermissions());
-$reversePayment = new Transition($committed, $reversed);
-//$commitPayment->addCondition(new ConditionedState(new ReviewCondition(), $committed, $pending));
-
-$stateMachine->addTransition($authPayment);
-$stateMachine->addTransition($commitPayment);
-$stateMachine->addTransition($approvePayment);
-$stateMachine->addTransition($commitPaymentReview);
-$stateMachine->addTransition($reversePayment);
-
-$stateMachine->addTrigger('authorize', array($authPayment));
-$stateMachine->addTrigger('commit', array($commitPayment, $commitPaymentReview, $approvePayment));
-$stateMachine->addTrigger('approve', array($approvePayment));
-$stateMachine->addTrigger('reverse', array($reversePayment));
+$stateMachine = new PaymentMachine('test', $payment);
 
 // Run tests
 var_dump($stateMachine->getCurrentState()->getName());

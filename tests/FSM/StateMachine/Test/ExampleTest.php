@@ -58,35 +58,47 @@ class FinancePermissions implements ConditionInterface
 }
 
 
+class ImportMachine extends StateMachine
+{
+    protected function configureMachine()
+    {
+        $created = new State('created', StateInterface::TYPE_INITIAL);
+        $imported = new State('imported');
+        $pending = new State('pending');
+        $approved = new State('approved');
+        $live = new State('live', StateInterface::TYPE_FINAL);
 
-$stateMachine = new StateMachine('test');
+        $importTransition = new Transition($created, $imported);
+        $livePendingTransition = new Transition($imported, $pending);
+        $livePendingTransition->addCondition(new Not(new LiveCondition()));
+        $requestApprovedTransition = new Transition($pending, $approved);
+        $liveApprovedTransition = new Transition($approved, $live);
+        $liveApprovedTransition->addCondition(new FinancePermissions());
+        $importLiveTransition = new Transition($imported, $live);
+        $importLiveTransition->addCondition(new LiveCondition());
 
-$created = new State('created', StateInterface::TYPE_INITIAL);
-$imported = new State('imported');
-$pending = new State('pending');
-$approved = new State('approved');
-$live = new State('live', StateInterface::TYPE_FINAL);
+        $this->addTransition($importTransition);
+        $this->addTransition($livePendingTransition);
+        $this->addTransition($requestApprovedTransition);
+        $this->addTransition($liveApprovedTransition);
+        $this->addTransition($importLiveTransition);
+
+        $this->addTrigger('import', array($importTransition));
+        $this->addTrigger(
+            'makeLive',
+            array(
+                $livePendingTransition,
+                $importLiveTransition,
+                $requestApprovedTransition,
+                $liveApprovedTransition
+            )
+        );
+
+    }
+}
 
 
-$importTransition = new Transition($created, $imported);
-$livePendingTransition = new Transition($imported, $pending);
-$livePendingTransition->addCondition(new Not(new LiveCondition()));
-$requestApprovedTransition = new Transition($pending, $approved);
-$liveApprovedTransition = new Transition($approved, $live);
-$liveApprovedTransition->addCondition(new FinancePermissions());
-$importLiveTransition = new Transition($imported, $live);
-$importLiveTransition->addCondition(new LiveCondition());
-
-$stateMachine->addTransition($importTransition);
-$stateMachine->addTransition($livePendingTransition);
-$stateMachine->addTransition($requestApprovedTransition);
-$stateMachine->addTransition($liveApprovedTransition);
-$stateMachine->addTransition($importLiveTransition);
-
-$stateMachine->addTrigger('import', array($importTransition));
-$stateMachine->addTrigger('makeLive', array($livePendingTransition, $importLiveTransition, $requestApprovedTransition, $liveApprovedTransition));
-
-
+$stateMachine = new ImportMachine('test');
 $stateMachine->trigger('import');
 $stateMachine->trigger('makeLive');
 
