@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 use Fhaculty\Graph\GraphViz;
 use Fhaculty\Graph\Graph;
 use FSM\StateMachine\Graph\Graph as GraphRender;
+use FSM\StateMachine\Graph\Ascii as GraphAscii;
 
 use FSM\StateMachine\StateMachine;
 use FSM\StateMachine\State\ActionInterface;
@@ -167,6 +168,10 @@ $viz->setFormat('svg');
 
 $render = new GraphRender($viz);
 echo $render->visualize($stateMachine);
+
+echo "<br/><br/>";
+$render = new GraphAscii();
+echo nl2br($render->visualize($stateMachine));
 /*
 
 
