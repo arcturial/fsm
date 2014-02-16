@@ -1,12 +1,9 @@
 <?php
-namespace League\StateMachine\Transition;
+namespace League\StateMachine\Condition;
 
 interface ConditionInterface
 {
     public function getName();
 
-    /**
-     * Return state
-     */
     public function check();
 }

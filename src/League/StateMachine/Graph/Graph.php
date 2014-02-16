@@ -3,13 +3,16 @@ namespace League\StateMachine\Graph;
 
 use League\StateMachine\StateMachine;
 use League\StateMachine\State\StateInterface;
+use League\StateMachine\Condition\ConditionInterface;
+use League\StateMachine\Transition\TransitionInterface;
 use Fhaculty\Graph\GraphViz;
 use Fhaculty\Graph\Graph as GraphBase;
 
 class Graph implements GraphInterface
 {
     private $viz;
-    private $vertices = array();
+    private $states = array();
+    private $conditions = array();
 
     public function __construct(GraphViz $viz)
     {
@@ -34,9 +37,22 @@ class Graph implements GraphInterface
         return $node;
     }
 
-    public function addEdge($state, $toState)
+    public function addCondition(GraphBase $graph, ConditionInterface $condition, $index)
     {
-        $edge = $this->vertices[$state]->createEdgeTo($this->vertices[$toState]);
+        $node = $graph->createVertex("[" . $index . "] " .  $condition->getName());
+
+        $node->setLayoutAttribute('shape', 'box');
+        $node->setLayoutAttribute('style', 'rounded,dashed');
+        $node->setLayoutAttribute('fontname', 'Arial');
+        $node->setLayoutAttribute('fontsize', '12');
+        $node->setLayoutAttribute('fontcolor', '#111111');
+
+        return $node;
+    }
+
+    public function addEdge($vertex, $toVertex)
+    {
+        $edge = $vertex->createEdgeTo($toVertex);
 
         $edge->setLayoutAttribute('shape', 'none');
         $edge->setLayoutAttribute('fontname', 'Arial');
@@ -51,7 +67,7 @@ class Graph implements GraphInterface
 
         // create some cities
         foreach ($machine->getStates() as $state) {
-            $this->vertices[$state->getName()] = $this->addNode(
+            $this->states[$state->getName()] = $this->addNode(
                 $graph,
                 $state,
                 $machine->isCurrentState($state->getName()),
@@ -60,26 +76,19 @@ class Graph implements GraphInterface
             );
         }
 
-        foreach ($this->vertices as $state => $vertex) {
-            foreach ($machine->getTransitions() as $transition) {
-                if ($transition->isInitialState($state)) {
-                    $transitionTo = $transition->getTransitionTo();
-                    $edge = $this->addEdge($state, $transitionTo);
+        foreach ($machine->getTransitions() as $index => $transition) {
 
-                    // Get conditions
-                    $label = "";
+            $vertex = $this->states[$transition->getInitialState()->getName()];
+            $vertexTo = $this->states[$transition->getTransitionTo()->getName()];
 
-                    foreach ($transition->getConditions() as $condition) {
-                        $if = "IF: " . $condition->getName();
-                        $class = get_class($condition);
+            if ($transition->getCondition()) {
+                $condition = $this->addCondition($graph, $transition->getCondition(), $index);
 
-                        $label .= str_pad($if, strlen($if) + 8, " ", STR_PAD_BOTH) . PHP_EOL
-                            . str_pad($class, strlen($class) + 8, " ", STR_PAD_BOTH) . PHP_EOL;
-                    }
-
-                    $edge->setLayoutAttribute('label', $label);
-                }
+                $this->addEdge($vertex, $condition);
+                $vertex = $condition;
             }
+
+            $this->addEdge($vertex, $vertexTo);
         }
 
         return $this->viz->createImageHtml();

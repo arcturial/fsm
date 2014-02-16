@@ -3,11 +3,9 @@ namespace League\StateMachine\State;
 
 interface StateInterface
 {
-    const TYPE_INITIAL = 0;
-    const TYPE_INTERMEDIATE = 1;
-    const TYPE_FINAL = 2;
-
-    public function __construct($name, $type);
+    const TYPE_INITIAL = 'initial';
+    const TYPE_INTERMEDIATE = 'intermediate';
+    const TYPE_FINAL = 'final';
 
     public function addAction(ActionInterface $action);
 

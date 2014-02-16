@@ -3,14 +3,25 @@ namespace League\StateMachine;
 
 use League\StateMachine\State\StateInterface;
 use League\StateMachine\Transition\TransitionInterface;
-use \SplObjectStore;
+use \SplObjectStorage;
 
 class StateMachine
 {
     private $activeState;
-
-    private $transitions = array();
+    private $name;
     private $states = array();
+    private $triggers = array();
+    private $transitions = array();
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 
     public function getCurrentState()
     {
@@ -41,9 +52,12 @@ class StateMachine
         return $this->states;
     }
 
-    public function addTransition($alias, TransitionInterface $transition)
+    public function addTransition(TransitionInterface $transition)
     {
-        $this->transitions[$alias] = $transition;
+        $this->addState($transition->getInitialState());
+        $this->addState($transition->getTransitionTo());
+
+        $this->transitions[] = $transition;
     }
 
     public function getTransitions()
@@ -51,22 +65,53 @@ class StateMachine
         return $this->transitions;
     }
 
-    public function transition($alias)
+    public function getAvailableTransitions()
     {
-        if (!array_key_exists($alias, $this->transitions)) {
-            throw new \InvalidArgumentException('Transition not exist');
+        $result = array();
+
+        foreach ($this->transitions as $transition) {
+            if ($transition->isInitialState($this->getCurrentState())) {
+                $result[] = $transition;
+            }
         }
 
-        $transition = $this->transitions[$alias];
+        return $result;
+    }
 
-        if ($transition->isInitialState($this->getCurrentState()->getName())) {
+    public function addTrigger($trigger, $transitions)
+    {
+        foreach ($transitions as $transition) {
+            if (!in_array($transition, $this->getTransitions())) {
+                throw new \LogicException('Invalid transition specified.');
+            }
+        }
 
-            if ($transition->process()) {
-                return $this->setCurrentState($transition->getTransitionTo());
+        $this->triggers[$trigger] = $transitions;
+    }
+
+    public function trigger($trigger, $deep = false)
+    {
+        $transitions = $this->triggers[$trigger];
+
+        do
+        {
+            $path = null;
+
+            foreach ($transitions as $transition) {
+                if (!$transition->isInitialState($this->getCurrentState())) {
+                    continue;
+                }
+
+                // Process a transition and mark it as the new starting point
+                if ($transition->process()) {
+                    $path = $transition;
+                    $this->setCurrentState($path->getTransitionTo()->getName());
+                    break;
+                }
             }
 
-        } else {
-            throw new \LogicException('Invalid state transition.');
-        }
+        } while ($path != null && $deep);
+
+        return $this->getCurrentState();
     }
 }

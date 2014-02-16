@@ -11,8 +11,8 @@ use League\StateMachine\State\ActionInterface;
 use League\StateMachine\State\StateInterface;
 use League\StateMachine\State\State;
 use League\StateMachine\Transition\Transition;
-use League\StateMachine\Transition\ConditionInterface;
-use League\StateMachine\Transition\StateTransition;
+use League\StateMachine\Condition\ConditionInterface;
+use League\StateMachine\Condition\Not;
 
 
 $stateMachine = null;
@@ -31,32 +31,6 @@ class ExampleTest extends \PHPUnit_Framework_TestCase
 }
 */
 
-class ImportAction implements ActionInterface
-{
-    public function __construct(Import $import)
-    {
-        $this->import = $import;
-    }
-
-    public function run()
-    {
-        $this->import = 'imported';
-    }
-}
-
-class ImportCondition implements ConditionInterface
-{
-    public function getName()
-    {
-        return 'Ready to import exchange rates.';
-    }
-
-    public function check()
-    {
-        return true;
-    }
-}
-
 class LiveCondition implements ConditionInterface
 {
     public function getName()
@@ -70,43 +44,57 @@ class LiveCondition implements ConditionInterface
     }
 }
 
-class Import
+class FinancePermissions implements ConditionInterface
 {
-    public $state = 'created';
+    public function getName()
+    {
+        return 'Has finance permissions';
+    }
+
+    public function check()
+    {
+        return true;
+    }
 }
 
 
 
-
-$import = new Import();
-$stateMachine = new StateMachine();
+$stateMachine = new StateMachine('test');
 
 $created = new State('created', StateInterface::TYPE_INITIAL);
 $imported = new State('imported');
-$imported->addAction(new ImportAction($import));
+$pending = new State('pending');
+$approved = new State('approved');
+$live = new State('live', StateInterface::TYPE_FINAL);
 
-$stateMachine->addState($created);
-$stateMachine->addState($imported);
-$stateMachine->addState(new State('live', StateInterface::TYPE_FINAL));
 
-$import = new Transition(array('created'), 'imported');
-$import->addCondition(new ImportCondition());
+$importTransition = new Transition($created, $imported);
+$livePendingTransition = new Transition($imported, $pending);
+$livePendingTransition->addCondition(new Not(new LiveCondition()));
+$requestApprovedTransition = new Transition($pending, $approved);
+$liveApprovedTransition = new Transition($approved, $live);
+$liveApprovedTransition->addCondition(new FinancePermissions());
+$importLiveTransition = new Transition($imported, $live);
+$importLiveTransition->addCondition(new LiveCondition());
 
-$live = new Transition(array('imported'), 'live');
-$live->addCondition(new LiveCondition());
+$stateMachine->addTransition($importTransition);
+$stateMachine->addTransition($livePendingTransition);
+$stateMachine->addTransition($requestApprovedTransition);
+$stateMachine->addTransition($liveApprovedTransition);
+$stateMachine->addTransition($importLiveTransition);
 
-$stateMachine->addTransition('import', $import);
-$stateMachine->addTransition('live', $live);
+$stateMachine->addTrigger('import', array($importTransition));
+$stateMachine->addTrigger('makeLive', array($livePendingTransition, $importLiveTransition, $requestApprovedTransition, $liveApprovedTransition));
 
 $stateMachine->setCurrentState('created');
 
 
-$stateMachine->transition('import');
-$stateMachine->transition('live');
+$stateMachine->trigger('import');
+$stateMachine->trigger('makeLive');
 
 
 $viz = new GraphViz(new Graph());
-//$viz->setExecutable('');
+$viz->setExecutable('"\\\\DEATHWING\\www\\graphviz-2.36\\release\\bin\\dot.exe"');
 $viz->setFormat('svg');
 
 $render = new GraphRender($viz);
