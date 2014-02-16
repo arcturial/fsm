@@ -1,11 +1,10 @@
 {
-    "name": "league/fsm",
+    "name": "arcturial/fsm",
     "description": "Simple Finite State Machine",
     "keywords": [
-        "league",
         "package"
     ],
-    "homepage": "https://github.com/php-loep/fsm",
+    "homepage": "https://github.com/arcturial",
     "license": "MIT",
     "authors": [
         {
@@ -17,13 +16,11 @@
     ],
     "require": {
         "php": ">=5.3",
-        "symfony/yaml": "*",
-        "symfony/config": "*",
         "clue/graph": "*"
     },
     "autoload": {
         "psr-0": {
-            "League": ["src", "tests"]
+            "FSM": ["src", "tests"]
         }
     }
 }
