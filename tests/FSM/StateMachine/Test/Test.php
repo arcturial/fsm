@@ -136,8 +136,6 @@ $stateMachine->addTrigger('commit', array($commitPayment, $commitPaymentReview, 
 $stateMachine->addTrigger('approve', array($approvePayment));
 $stateMachine->addTrigger('reverse', array($reversePayment));
 
-$stateMachine->setCurrentState('created');
-
 // Run tests
 var_dump($stateMachine->getCurrentState()->getName());
 

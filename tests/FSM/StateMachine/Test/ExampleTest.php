@@ -86,8 +86,6 @@ $stateMachine->addTransition($importLiveTransition);
 $stateMachine->addTrigger('import', array($importTransition));
 $stateMachine->addTrigger('makeLive', array($livePendingTransition, $importLiveTransition, $requestApprovedTransition, $liveApprovedTransition));
 
-$stateMachine->setCurrentState('created');
-
 
 $stateMachine->trigger('import');
 $stateMachine->trigger('makeLive');
