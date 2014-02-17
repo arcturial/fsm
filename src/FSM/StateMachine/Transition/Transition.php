@@ -47,7 +47,6 @@ class Transition implements TransitionInterface
     {
         $this->initial = $initial;
         $this->transition = $transition;
-        $this->conditions = new SplObjectStorage();
     }
 
     /**
@@ -99,6 +98,7 @@ class Transition implements TransitionInterface
             return $this->condition->check();
         }
 
-        return true;
+        // Process to the transition
+        return $this->getTransitionTo()->process();
     }
 }

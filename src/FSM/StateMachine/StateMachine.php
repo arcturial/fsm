@@ -47,6 +47,11 @@ abstract class StateMachine
     private $transitions = array();
 
     /**
+     * @var array
+     */
+    private $callbacks = array();
+
+    /**
      * Create a new machine and label it.
      *
      * @param string $name The label of the machine
@@ -66,6 +71,65 @@ abstract class StateMachine
     abstract protected function configureMachine();
 
     /**
+     * Set the current state. This method allows you to update
+     * to state in which a machine currently resides.
+     *
+     * @param string $state The state of the machine
+     *
+     * @return boolean
+     */
+    protected function setCurrentState($state)
+    {
+        $this->activeState = $state;
+    }
+
+    /**
+     * Add a new transition to the machine.
+     *
+     * @param TransitionInterface $transition The transition object
+     *
+     * @return boolean
+     */
+    protected function addTransition(TransitionInterface $transition)
+    {
+        $this->states[$transition->getInitialState()->getName()] = $transition->getInitialState();
+        $this->states[$transition->getTransitionTo()->getName()] = $transition->getTransitionTo();
+
+        // Resolve the initial state
+        foreach ($this->states as $state) {
+            if ($state->getType() == StateInterface::TYPE_INITIAL) {
+                $this->setCurrentState($state->getName());
+            }
+        }
+
+        $this->transitions[] = $transition;
+    }
+
+    /**
+     * Add a new event trigger. The trigger contains a list of transitions
+     * that is supported as part of this triggered process. These are all
+     * "potential" transitions.
+     *
+     * @param string $trigger     The trigger name
+     * @param array  $transitions Array of transitions
+     *
+     * @return boolean
+     */
+    protected function addTrigger($trigger, $transitions)
+    {
+        // Ensure all transitions are supported by this machine
+        foreach ($transitions as $transition) {
+            if (!in_array($transition, $this->getTransitions())) {
+                throw new LogicException(
+                    'Invalid transition specified at trigger "' . $trigger . '".'
+                );
+            }
+        }
+
+        $this->triggers[$trigger] = $transitions;
+    }
+
+    /**
      * Return the name of the machine.
      *
      * @return string
@@ -83,19 +147,6 @@ abstract class StateMachine
     public function getCurrentState()
     {
         return $this->states[$this->activeState];
-    }
-
-    /**
-     * Set the current state. This method allows you to update
-     * to state in which a machine currently resides.
-     *
-     * @param string $state The state of the machine
-     *
-     * @return boolean
-     */
-    protected function setCurrentState($state)
-    {
-        $this->activeState = $state;
     }
 
     /**
@@ -119,28 +170,6 @@ abstract class StateMachine
     public function getStates()
     {
         return $this->states;
-    }
-
-    /**
-     * Add a new transition to the machine.
-     *
-     * @param TransitionInterface $transition The transition object
-     *
-     * @return boolean
-     */
-    public function addTransition(TransitionInterface $transition)
-    {
-        $this->states[$transition->getInitialState()->getName()] = $transition->getInitialState();
-        $this->states[$transition->getTransitionTo()->getName()] = $transition->getTransitionTo();
-
-        // Resolve the initial state
-        foreach ($this->states as $state) {
-            if ($state->getType() == StateInterface::TYPE_INITIAL) {
-                $this->setCurrentState($state->getName());
-            }
-        }
-
-        $this->transitions[] = $transition;
     }
 
     /**
@@ -172,27 +201,15 @@ abstract class StateMachine
     }
 
     /**
-     * Add a new event trigger. The trigger contains a list of transitions
-     * that is supported as part of this triggered process. These are all
-     * "potential" transitions.
-     *
-     * @param string $trigger     The trigger name
-     * @param array  $transitions Array of transitions
+     * Whenever a state changes. This callback will be triggered.
      *
      * @return boolean
      */
-    public function addTrigger($trigger, $transitions)
+    public function onTransition($callback)
     {
-        // Ensure all transitions are supported by this machine
-        foreach ($transitions as $transition) {
-            if (!in_array($transition, $this->getTransitions())) {
-                throw new LogicException(
-                    'Invalid transition specified at trigger "' . $trigger . '".'
-                );
-            }
+        if (is_callable($callback)) {
+            $this->callbacks[] = $callback;
         }
-
-        $this->triggers[$trigger] = $transitions;
     }
 
     /**
@@ -220,6 +237,11 @@ abstract class StateMachine
 
                 // Process a transition and mark it as the new starting point
                 if ($transition->process()) {
+
+                    foreach ($this->callbacks as $callback) {
+                        call_user_func_array($callback, array($transition));
+                    }
+
                     $path = $transition;
                     $this->setCurrentState($path->getTransitionTo()->getName());
                     break;

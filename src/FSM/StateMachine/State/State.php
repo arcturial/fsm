@@ -72,5 +72,12 @@ class State implements StateInterface
      */
     public function process()
     {
+        $result = true;
+
+        foreach ($this->actions as $action) {
+            $result &= $action->run();
+        }
+
+        return (bool) $result;
     }
 }
