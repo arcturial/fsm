@@ -226,8 +226,8 @@ abstract class StateMachine
     {
         $transitions = $this->triggers[$trigger];
 
-        do
-        {
+        do {
+
             $path = null;
 
             foreach ($transitions as $transition) {
