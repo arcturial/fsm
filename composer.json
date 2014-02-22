@@ -2,14 +2,17 @@
     "name": "arcturial/fsm",
     "description": "Simple Finite State Machine",
     "keywords": [
-        "package"
+        "package",
+        "finite state machine",
+        "state machine",
+        "fsm"
     ],
     "homepage": "https://github.com/arcturial",
     "license": "MIT",
     "authors": [
         {
             "name": "Chris Brand",
-            "email": "arcturial@gmail.com",
+            "email": "webmaster@cainsvault.com",
             "homepage": "http://www.cainsvault.com",
             "role": "Developer"
         }
@@ -20,7 +23,7 @@
     },
     "autoload": {
         "psr-0": {
-            "FSM": ["src", "tests"]
+            "Arcturial": ["src", "tests"]
         }
     }
 }

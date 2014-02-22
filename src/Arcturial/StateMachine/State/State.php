@@ -4,14 +4,14 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine\State;
+namespace Arcturial\StateMachine\State;
 
 /**
  * States are nodes in a state graph. They define certain 'states'
  * within a process. This is a default state object.
  *
- * @category FSM
- * @package  FSM\StateMachine\State
+ * @category Arcturial
+ * @package  Arcturial\StateMachine\State
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 class State implements StateInterface

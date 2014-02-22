@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="FSM Test Suite">
-            <directory>tests/FSM</directory>
+        <testsuite name="Finite State Machine Test Suite">
+            <directory>tests/Arcturial</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/FSM</directory>
+            <directory suffix=".php">src/Arcturial</directory>
         </whitelist>
     </filter>
 </phpunit>

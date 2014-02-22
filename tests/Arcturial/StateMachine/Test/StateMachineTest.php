@@ -1,10 +1,10 @@
 <?php
-namespace FSM\StateMachine\Test;
+namespace Arcturial\StateMachine\Test;
 
-use FSM\StateMachine\StateMachine;
-use FSM\StateMachine\State\State;
-use FSM\StateMachine\State\StateInterface;
-use FSM\StateMachine\Transition\Transition;
+use Arcturial\StateMachine\StateMachine;
+use Arcturial\StateMachine\State\State;
+use Arcturial\StateMachine\State\StateInterface;
+use Arcturial\StateMachine\Transition\Transition;
 
 class StateMachineTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +13,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $stateMachine = $this->getMockBuilder('FSM\StateMachine\StateMachine')
+        $stateMachine = $this->getMockBuilder('Arcturial\StateMachine\StateMachine')
             ->setMethods(array('configureMachine'))
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();

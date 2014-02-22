@@ -1,13 +1,13 @@
 <?php
-namespace FSM\StateMachine\Test\Condition;
+namespace Arcturial\StateMachine\Test\Condition;
 
-use FSM\StateMachine\Condition\Not;
+use Arcturial\StateMachine\Condition\Not;
 
 class ConditionTest extends \PHPUnit_Framework_TestCase
 {
     public function testNot()
     {
-        $condition = $this->getMockBuilder('FSM\StateMachine\Condition\ConditionInterface')
+        $condition = $this->getMockBuilder('Arcturial\StateMachine\Condition\ConditionInterface')
             ->setMethods(array('check'))
             ->getMockForAbstractClass();
 

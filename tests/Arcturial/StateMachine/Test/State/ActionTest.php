@@ -1,7 +1,7 @@
 <?php
-namespace FSM\StateMachine\Test\State;
+namespace Arcturial\StateMachine\Test\State;
 
-use FSM\StateMachine\State\ActionInterface;
+use Arcturial\StateMachine\State\ActionInterface;
 
 class ActionTest extends \PHPUnit_Framework_TestCase
 {

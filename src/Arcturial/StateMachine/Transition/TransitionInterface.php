@@ -4,17 +4,17 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine\Transition;
+namespace Arcturial\StateMachine\Transition;
 
-use FSM\StateMachine\State\StateInterface;
-use FSM\StateMachine\Condition\ConditionInterface;
+use Arcturial\StateMachine\State\StateInterface;
+use Arcturial\StateMachine\Condition\ConditionInterface;
 
 /**
  * Transitions are defined paths and conditions that need
  * to be followed from one state to another.
  *
- * @category FSM
- * @package  FSM\StateMachine\Transition
+ * @category Arcturial
+ * @package  Arcturial\StateMachine\Transition
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 interface TransitionInterface

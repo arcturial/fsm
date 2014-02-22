@@ -4,11 +4,11 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine\Transition;
+namespace Arcturial\StateMachine\Transition;
 
-use FSM\StateMachine\State\StateInterface;
-use FSM\StateMachine\Transition\TransitionInterface;
-use FSM\StateMachine\Condition\ConditionInterface;
+use Arcturial\StateMachine\State\StateInterface;
+use Arcturial\StateMachine\Transition\TransitionInterface;
+use Arcturial\StateMachine\Condition\ConditionInterface;
 use \SplObjectStorage;
 
 /**
@@ -16,8 +16,8 @@ use \SplObjectStorage;
  * to be followed from one state to another. This is the default
  * transition object.
  *
- * @category FSM
- * @package  FSM\StateMachine\Transition
+ * @category Arcturial
+ * @package  Arcturial\StateMachine\Transition
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 class Transition implements TransitionInterface

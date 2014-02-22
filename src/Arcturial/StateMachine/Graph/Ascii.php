@@ -4,20 +4,20 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine\Graph;
+namespace Arcturial\StateMachine\Graph;
 
-use FSM\StateMachine\StateMachine;
-use FSM\StateMachine\State\StateInterface;
-use FSM\StateMachine\Condition\ConditionInterface;
-use FSM\StateMachine\Transition\TransitionInterface;
+use Arcturial\StateMachine\StateMachine;
+use Arcturial\StateMachine\State\StateInterface;
+use Arcturial\StateMachine\Condition\ConditionInterface;
+use Arcturial\StateMachine\Transition\TransitionInterface;
 use Fhaculty\Graph\GraphViz;
 use Fhaculty\Graph\Graph as GraphBase;
 
 /**
  * Visualize graph transitions as ASCII text.
  *
- * @category FSM
- * @package  FSM\StateMachine\Graph
+ * @category Arcturial
+ * @package  Arcturial\StateMachine\Graph
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 class Ascii implements GraphInterface

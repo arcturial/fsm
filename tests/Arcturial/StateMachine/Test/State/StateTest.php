@@ -1,14 +1,14 @@
 <?php
-namespace FSM\StateMachine\Test\State;
+namespace Arcturial\StateMachine\Test\State;
 
-use FSM\StateMachine\State\State;
-use FSM\StateMachine\State\StateInterface;
+use Arcturial\StateMachine\State\State;
+use Arcturial\StateMachine\State\StateInterface;
 
 class StateTest extends \PHPUnit_Framework_TestCase
 {
     public function testAction()
     {
-        $action = $this->getMock('FSM\StateMachine\State\ActionInterface', array('run'));
+        $action = $this->getMock('Arcturial\StateMachine\State\ActionInterface', array('run'));
         $action->expects($this->once())
             ->method('run')
             ->will($this->returnValue(true));

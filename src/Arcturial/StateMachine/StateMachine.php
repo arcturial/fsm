@@ -4,10 +4,10 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine;
+namespace Arcturial\StateMachine;
 
-use FSM\StateMachine\State\StateInterface;
-use FSM\StateMachine\Transition\TransitionInterface;
+use Arcturial\StateMachine\State\StateInterface;
+use Arcturial\StateMachine\Transition\TransitionInterface;
 use \SplObjectStorage;
 use \LogicException;
 
@@ -15,8 +15,8 @@ use \LogicException;
  * The state machine is an object that keeps track of all
  * transitions/triggers and states in a machine.
  *
- * @category FSM
- * @package  FSM\StateMachine
+ * @category Arcturial
+ * @package  Arcturial\StateMachine
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 abstract class StateMachine

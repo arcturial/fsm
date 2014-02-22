@@ -5,24 +5,24 @@
  * we have our actions/conditions/machine all in one script...so rather look
  * past that fact.
  */
-namespace FSM\StateMachine\Stage;
+namespace Arcturial\StateMachine\Stage;
 
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use Fhaculty\Graph\GraphViz;
 use Fhaculty\Graph\Graph;
-use FSM\StateMachine\Graph\Graph as GraphRender;
-use FSM\StateMachine\Graph\Ascii as GraphAscii;
+use Arcturial\StateMachine\Graph\Graph as GraphRender;
+use Arcturial\StateMachine\Graph\Ascii as GraphAscii;
 
-use FSM\StateMachine\StateMachine;
-use FSM\StateMachine\State\ActionInterface;
-use FSM\StateMachine\State\ResolvableState;
-use FSM\StateMachine\Condition\ConditionedState;
-use FSM\StateMachine\State\StateInterface;
-use FSM\StateMachine\State\State;
-use FSM\StateMachine\Transition\Transition;
-use FSM\StateMachine\Condition\ConditionInterface;
-use FSM\StateMachine\Transition\StateTransition;
+use Arcturial\StateMachine\StateMachine;
+use Arcturial\StateMachine\State\ActionInterface;
+use Arcturial\StateMachine\State\ResolvableState;
+use Arcturial\StateMachine\Condition\ConditionedState;
+use Arcturial\StateMachine\State\StateInterface;
+use Arcturial\StateMachine\State\State;
+use Arcturial\StateMachine\Transition\Transition;
+use Arcturial\StateMachine\Condition\ConditionInterface;
+use Arcturial\StateMachine\Transition\StateTransition;
 
 // Create an action to execute when transfering to
 // "Pending" state

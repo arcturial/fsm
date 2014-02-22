@@ -4,13 +4,13 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine\Condition;
+namespace Arcturial\StateMachine\Condition;
 
 /**
  * This condition is used to invert any other condition.
  *
- * @category FSM
- * @package  FSM\StateMachine\Condition
+ * @category Arcturial
+ * @package  Arcturial\StateMachine\Condition
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 class Not implements ConditionInterface

@@ -1,7 +1,7 @@
 <?php
-namespace FSM\StateMachine\Test\Transition;
+namespace Arcturial\StateMachine\Test\Transition;
 
-use FSM\StateMachine\Transition\Transition;
+use Arcturial\StateMachine\Transition\Transition;
 
 class TransitionTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,11 +11,11 @@ class TransitionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->created = $this->getMockBuilder('FSM\StateMachine\State\State')
+        $this->created = $this->getMockBuilder('Arcturial\StateMachine\State\State')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->imported = $this->getMockBuilder('FSM\StateMachine\State\State')
+        $this->imported = $this->getMockBuilder('Arcturial\StateMachine\State\State')
             ->disableOriginalConstructor()
             ->setMethods(array('None'))
             ->getMock();
@@ -40,7 +40,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase
 
     public function testConditions()
     {
-        $condition = $this->getMockBuilder('FSM\StateMachine\Condition\ConditionInterface')
+        $condition = $this->getMockBuilder('Arcturial\StateMachine\Condition\ConditionInterface')
             ->setMethods(array('check'))
             ->getMockForAbstractClass();
 
@@ -55,7 +55,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase
 
     public function testActions()
     {
-        $action = $this->getMockBuilder('FSM\StateMachine\State\ActionInterface')
+        $action = $this->getMockBuilder('Arcturial\StateMachine\State\ActionInterface')
             ->setMethods(array('run'))
             ->getMockForAbstractClass();
 

@@ -4,15 +4,15 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine\State;
+namespace Arcturial\StateMachine\State;
 
 /**
  * Actions are called once a transition has been completed
  * and the state needs to be updated. If any action fails
  * it is the responsibility of the state to rollback changes.
  *
- * @category FSM
- * @package  FSM\StateMachine\State
+ * @category Arcturial
+ * @package  Arcturial\StateMachine\State
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 interface ActionInterface

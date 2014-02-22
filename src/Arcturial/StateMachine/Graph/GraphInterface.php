@@ -4,17 +4,17 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine\Graph;
+namespace Arcturial\StateMachine\Graph;
 
-use FSM\StateMachine\StateMachine;
+use Arcturial\StateMachine\StateMachine;
 
 /**
  * The graph interface defines some methods which should
  * be used to create any visualization adapters. These adapters
  * will interact with external graph visualization tools.
  *
- * @category FSM
- * @package  FSM\StateMachine\Graph
+ * @category Arcturial
+ * @package  Arcturial\StateMachine\Graph
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 interface GraphInterface

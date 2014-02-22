@@ -4,14 +4,14 @@
  * finite state machine implementation for PHP.
  */
 
-namespace FSM\StateMachine\Condition;
+namespace Arcturial\StateMachine\Condition;
 
 /**
  * Conditions are blocks of logic that evaluates to
  * a true/false definition.
  *
- * @category FSM
- * @package  FSM\StateMachine\Condition
+ * @category Arcturial
+ * @package  Arcturial\StateMachine\Condition
  * @author   Chris Brand <webmaster@cainsvault.com>
  */
 interface ConditionInterface
