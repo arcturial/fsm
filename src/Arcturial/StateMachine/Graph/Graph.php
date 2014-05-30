@@ -159,7 +159,7 @@ class Graph implements GraphInterface
                 $state->getType() == StateInterface::TYPE_FINAL
             );
             
-            if($this->renderActions){
+            if ($this->renderActions) {
                 $v1 = $this->states[$state->getName()] ;
                 $v2 = null;
 
@@ -189,7 +189,8 @@ class Graph implements GraphInterface
         return $this->viz->createImageHtml();
     }
     
-    public function setRenderActions($renderActions) {
+    public function setRenderActions($renderActions)
+    {
         $this->renderActions = $renderActions;
     }
 }
