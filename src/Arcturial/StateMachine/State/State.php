@@ -80,4 +80,8 @@ class State implements StateInterface
 
         return (bool) $result;
     }
+    
+    public function getActions() {
+        return $this->actions;
+    }
 }

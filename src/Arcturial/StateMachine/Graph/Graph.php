@@ -12,6 +12,7 @@ use Arcturial\StateMachine\Condition\ConditionInterface;
 use Arcturial\StateMachine\Transition\TransitionInterface;
 use Fhaculty\Graph\GraphViz;
 use Fhaculty\Graph\Graph as GraphBase;
+use Arcturial\StateMachine\State\ActionInterface;
 
 /**
  * Graph abstraction used to visualize a graph of the
@@ -33,6 +34,12 @@ class Graph implements GraphInterface
      */
     private $states = array();
 
+    /**
+     *
+     * @var bool $renderActions - should actions be rendered  
+     */
+    private $renderActions = false;
+    
     /**
      * Create a new visualizer.
      *
@@ -93,6 +100,28 @@ class Graph implements GraphInterface
 
         return $node;
     }
+    
+    /**
+     * Add a new action.
+     *
+     * @param GraphBase          $graph     The graphing object
+     * @param ActionInterface $action The action to visualize
+     *
+     * @return Vertex
+     */
+    public function addAction(GraphBase $graph, ActionInterface $action)
+    {
+        $node = $graph->createVertex($action->getName());
+
+        $node->setLayoutAttribute('shape', 'ellipse');
+        $node->setLayoutAttribute('style', 'solid,filled');
+        $node->setLayoutAttribute('fillcolor', '#FFB366');
+        $node->setLayoutAttribute('fontname', 'Arial');
+        $node->setLayoutAttribute('fontsize', '12');
+        $node->setLayoutAttribute('fontcolor', '#111111');
+
+        return $node;
+    }
 
     /**
      * Add a new edge.
@@ -129,6 +158,17 @@ class Graph implements GraphInterface
                 $state->getType() == StateInterface::TYPE_INITIAL,
                 $state->getType() == StateInterface::TYPE_FINAL
             );
+            
+            if($this->renderActions){
+                $v1 = $this->states[$state->getName()] ;
+                $v2 = null;
+
+                foreach ($state->getActions() as $action) {
+                    $v2 = $this->addAction($graph, $action);
+                    $this->addEdge($v1, $v2);
+                    $v1 = $v2;
+                }
+            }
         }
 
         foreach ($machine->getTransitions() as $index => $transition) {
@@ -147,5 +187,9 @@ class Graph implements GraphInterface
         }
 
         return $this->viz->createImageHtml();
+    }
+    
+    public function setRenderActions($renderActions) {
+        $this->renderActions = $renderActions;
     }
 }
