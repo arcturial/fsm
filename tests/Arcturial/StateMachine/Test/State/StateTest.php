@@ -4,6 +4,7 @@ namespace Arcturial\StateMachine\Test\State;
 use Arcturial\StateMachine\State\State;
 use Arcturial\StateMachine\State\StateInterface;
 
+/* Test for fsm state */
 class StateTest extends \PHPUnit_Framework_TestCase
 {
     public function testAction()
