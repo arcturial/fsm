@@ -38,6 +38,12 @@ class Transition implements TransitionInterface
     private $condition;
 
     /**
+     *
+     * @var object
+     */
+    protected $context = null;
+
+    /**
      * Construct a new transition.
      *
      * @param StateInterface $initial    The initial state
@@ -47,6 +53,10 @@ class Transition implements TransitionInterface
     {
         $this->initial = $initial;
         $this->transition = $transition;
+        
+        // Inject self into states
+        $this->initial->transition = $this;
+        $this->transition->transition = $this;
     }
 
     /**
@@ -79,6 +89,9 @@ class Transition implements TransitionInterface
     public function addCondition(ConditionInterface $condition)
     {
         $this->condition = $condition;
+        
+        // Inject self into condition
+        $this->condition->transition = $this;
     }
 
     /**
@@ -94,11 +107,29 @@ class Transition implements TransitionInterface
      */
     public function process()
     {
-        if ($this->condition) {
-            return $this->condition->check();
+        if ($this->condition && $this->condition->check()) {
+            // Process to the transition
+            
+            return $this->getTransitionTo()->process();
         }
 
-        // Process to the transition
-        return $this->getTransitionTo()->process();
+        return false;
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContext($context)
+    {
+        $this->context = $context;
+    }
+
 }
