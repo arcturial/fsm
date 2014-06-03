@@ -107,13 +107,9 @@ class Transition implements TransitionInterface
      */
     public function process()
     {
-        if ($this->condition && $this->condition->check()) {
-            // Process to the transition
-            
-            return $this->getTransitionTo()->process();
-        }
+        $process = ($this->condition) ? $this->condition->check() : true;
 
-        return false;
+        return ($process) ? $this->getTransitionTo()->process() : false;
     }
     
     /**
