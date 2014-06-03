@@ -65,4 +65,16 @@ interface TransitionInterface
      * @return boolean
      */
     public function process();
+
+    /**
+     * Get context for the state
+     * 
+     * @return object
+     */
+    public function getContext();
+    
+    /**
+     * Set context for the state
+     */
+    public function setContext($context);
 }

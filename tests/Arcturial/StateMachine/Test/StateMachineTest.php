@@ -19,7 +19,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase
             ->getMockForAbstractClass();
 
         $this->stateMachineMock = $stateMachine;
-        $this->stateMachine = new MockStateMachine('Machine Name');
+        $this->stateMachine = new MockStateMachine('Machine Name', $this->getMockContext());
     }
 
     public function testConfigure()
@@ -71,6 +71,18 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('created', $this->stateMachine->getCurrentState()->getName());
         $this->stateMachine->trigger('deepImport', true);
         $this->assertSame('live', $this->stateMachine->getCurrentState()->getName());
+    }
+    
+    public function testContext() {
+        $this->assertEquals($this->getMockContext(), $this->stateMachine->getContext());
+    }
+    
+    public function getMockContext()
+    {
+        $context = new \stdClass();
+        $context->name = 'Import test context';
+        
+        return $context;
     }
 }
 

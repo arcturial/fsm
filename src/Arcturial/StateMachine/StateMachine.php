@@ -50,15 +50,22 @@ abstract class StateMachine
      * @var array
      */
     private $callbacks = array();
+    
+    /**
+     *
+     * @var object
+     */
+    protected $context = null;
 
     /**
      * Create a new machine and label it.
      *
      * @param string $name The label of the machine
      */
-    public function __construct($name)
+    public function __construct($name, $context = null)
     {
         $this->name = $name;
+        $this->context = $context;
 
         $this->configureMachine();
     }
@@ -94,7 +101,10 @@ abstract class StateMachine
     {
         $this->states[$transition->getInitialState()->getName()] = $transition->getInitialState();
         $this->states[$transition->getTransitionTo()->getName()] = $transition->getTransitionTo();
-
+        
+        // Inject context into transition
+        $transition->setContext($this->context);
+        
         // Resolve the initial state
         foreach ($this->states as $state) {
             if ($state->getType() == StateInterface::TYPE_INITIAL) {
@@ -251,5 +261,15 @@ abstract class StateMachine
         } while ($path != null && $deep);
 
         return $this->getCurrentState();
+    }
+    
+    /**
+     * Returns fsm context
+     * 
+     * @return object
+     */
+    public function getContext()
+    {
+        return $this->context;
     }
 }

@@ -48,6 +48,9 @@ class State implements StateInterface
      */
     public function addAction(ActionInterface $action)
     {
+        // Inject self into action
+        $action->state = $this;
+        
         $this->actions[] = $action;
     }
 
@@ -65,6 +68,14 @@ class State implements StateInterface
     public function getType()
     {
         return $this->type;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransition()
+    {
+        return $this->transition;
     }
 
     /**
