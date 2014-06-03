@@ -131,5 +131,4 @@ class Transition implements TransitionInterface
     {
         $this->context = $context;
     }
-
 }
