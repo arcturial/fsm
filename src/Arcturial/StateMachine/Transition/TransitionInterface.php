@@ -67,14 +67,14 @@ interface TransitionInterface
     public function process();
 
     /**
-     * Get context for the state
+     * Get parent state machine
      * 
      * @return object
      */
-    public function getContext();
+    public function getMachine();
     
     /**
-     * Set context for the state
+     * Set parent state machine
      */
-    public function setContext($context);
+    public function setMachine($machine);
 }

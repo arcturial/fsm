@@ -21,7 +21,6 @@ class TransitionTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->transition = new Transition($this->created, $this->imported);
-        $this->transition->setContext($this->getMockContext());
     }
 
     public function testInitial()
@@ -68,13 +67,5 @@ class TransitionTest extends \PHPUnit_Framework_TestCase
         $this->transition->getTransitionTo()->addAction($action);
         $this->assertTrue($this->transition->process());
         $this->assertEquals($this->transition, $action->state->transition);
-    }
-    
-    public function getMockContext()
-    {
-        $context = new \stdClass();
-        $context->name = 'Import test context';
-        
-        return $context;
     }
 }

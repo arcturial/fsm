@@ -39,9 +39,9 @@ class Transition implements TransitionInterface
 
     /**
      *
-     * @var object
+     * @var \Arcturial\StateMachine\StateMachine
      */
-    protected $context = null;
+    protected $machine = null;
 
     /**
      * Construct a new transition.
@@ -115,16 +115,16 @@ class Transition implements TransitionInterface
     /**
      * {@inheritdoc}
      */
-    public function getContext()
+    public function getMachine()
     {
-        return $this->context;
+        return $this->machine;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setContext($context)
+    public function setMachine($machine)
     {
-        $this->context = $context;
+        $this->machine = $machine;
     }
 }
