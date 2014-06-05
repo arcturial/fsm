@@ -4,7 +4,7 @@ Finite State Machine
 Master: [![Build Status](https://secure.travis-ci.org/arcturial/fsm.png?branch=master)](http://travis-ci.org/arcturial/fsm)
 
 THis library provides a simple integrated Finite State Machine. The state machine consts of States/Transitions/Triggers.
-
+This is experimental fork of arturial/fsm with the focus on building business process related tool.
 
 1. States
 ---------
