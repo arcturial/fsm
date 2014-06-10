@@ -55,6 +55,13 @@ interface StateInterface
     public function getType();
 
     /**
+     * Get transition, executed on given state
+     *
+     * @return \Arcturial\StateMachine\Transition\TransitionInterface
+     */
+    public function getTransition();
+
+    /**
      * Process the actions of the state.
      *
      * @return boolean

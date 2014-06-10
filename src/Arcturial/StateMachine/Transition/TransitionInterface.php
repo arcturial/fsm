@@ -65,4 +65,16 @@ interface TransitionInterface
      * @return boolean
      */
     public function process();
+
+    /**
+     * Get parent state machine
+     * 
+     * @return object
+     */
+    public function getMachine();
+    
+    /**
+     * Set parent state machine
+     */
+    public function setMachine($machine);
 }

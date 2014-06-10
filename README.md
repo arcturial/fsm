@@ -5,7 +5,6 @@ Master: [![Build Status](https://secure.travis-ci.org/arcturial/fsm.png?branch=m
 
 THis library provides a simple integrated Finite State Machine. The state machine consts of States/Transitions/Triggers.
 
-
 1. States
 ---------
 

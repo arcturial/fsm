@@ -2,6 +2,7 @@
 namespace Arcturial\StateMachine\Test;
 
 use Arcturial\StateMachine\StateMachine;
+use Arcturial\StateMachine\ContextLocator;
 use Arcturial\StateMachine\State\State;
 use Arcturial\StateMachine\State\StateInterface;
 use Arcturial\StateMachine\Transition\Transition;
@@ -10,6 +11,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase
 {
     private $stateMachineMock;
     private $stateMachine;
+    private $locator;
 
     public function setUp()
     {
@@ -18,8 +20,9 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
+        $this->locator = $this->getMockContextLocator();
         $this->stateMachineMock = $stateMachine;
-        $this->stateMachine = new MockStateMachine('Machine Name');
+        $this->stateMachine = new MockStateMachine('Machine Name', $this->locator);
     }
 
     public function testConfigure()
@@ -71,6 +74,48 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('created', $this->stateMachine->getCurrentState()->getName());
         $this->stateMachine->trigger('deepImport', true);
         $this->assertSame('live', $this->stateMachine->getCurrentState()->getName());
+    }
+    
+    public function testContextLocator() {
+        $this->assertEquals($this->locator, $this->stateMachine->getContextLocator());
+    }
+    
+    public function testContextLocatorLocate()
+    {
+        $obj = $this->locator->locate('Test');
+        $this->assertEquals('Test', $obj->name);
+    }
+    
+    public function testContextLocatorLocateByParam()
+    {
+        $obj = $this->locator->locate('TestWithId');
+        $this->assertEquals('Test 2', $obj->name);
+    }
+    
+    public function getMockContextLocator()
+    {
+        $locator = new TestLocator();
+        $locator->setParam('test_id', 2);
+        
+        return $locator;
+    }
+}
+
+class TestLocator extends ContextLocator
+{
+    public function locateTest(){
+        $obj = new \stdClass();
+        $obj->name = 'Test';
+        
+        return $obj;
+    }
+    
+    public function locateTestWithId(){
+        $obj = new \stdClass();
+        $obj->name = 'Test 2';
+        $obj->id = $this->params->test_id;
+        
+        return $obj;
     }
 }
 
